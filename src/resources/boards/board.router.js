@@ -1,15 +1,14 @@
 const router = require('express').Router();
-const User = require('./user.model');
-const usersService = require('./user.service');
+const boardsService = require('./board.service');
 
 router.route('/').get(async (req, res) => {
-  const users = await usersService.getAll();
-  res.json(users.map(User.toResponse));
+  const boards = await boardsService.getAll();
+  res.json(boards);
 });
 router.route('/').post(async (req, res, next) => {
   try {
-    const user = await usersService.create(req.body);
-    res.status(201).json(User.toResponse(user));
+    const board = await boardsService.create(req.body);
+    res.status(201).json(board);
   } catch (err) {
     if (err.message === 'badRequest') {
       res.sendStatus(400);
@@ -18,10 +17,10 @@ router.route('/').post(async (req, res, next) => {
     }
   }
 });
-router.route('/:userId').get(async (req, res, next) => {
+router.route('/:boardId').get(async (req, res, next) => {
   try {
-    const user = await usersService.getOne(req.params.userId);
-    res.json(User.toResponse(user));
+    const board = await boardsService.getOne(req.params.boardId);
+    res.json(board);
   } catch (err) {
     if (err.message === 'notFound') {
       res.sendStatus(404);
@@ -31,10 +30,10 @@ router.route('/:userId').get(async (req, res, next) => {
   }
 });
 
-router.route('/:userId').put(async (req, res, next) => {
+router.route('/:boardId').put(async (req, res, next) => {
   try {
-    const user = await usersService.updateOne(req.params.userId, req.body);
-    res.json(User.toResponse(user));
+    const board = await boardsService.updateOne(req.params.boardId, req.body);
+    res.json(board);
   } catch (err) {
     if (err.message === 'notFound') {
       res.sendStatus(404);
@@ -46,12 +45,13 @@ router.route('/:userId').put(async (req, res, next) => {
   }
 });
 
-router.route('/:userId').delete(async (req, res, next) => {
+router.route('/:boardId').delete(async (req, res, next) => {
   try {
-    await usersService.delete(req.params.userId);
+    await boardsService.delete(req.params.boardId);
     res.sendStatus(204);
   } catch (err) {
-    if (err === 'notFound') {
+    if (err.message === 'notFound') {
+      console.log('nooooot');
       res.sendStatus(404);
     } else {
       next(err);
