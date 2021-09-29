@@ -1,29 +1,31 @@
-const router = require('express').Router();
-const User = require('./user.model');
-const usersService = require('./user.service');
+import router, { ErrorRequestHandler } from 'express';
+import { RequestParams } from '../../@types/module';
+import User from './user.model';
+import usersService from './user.service';
 
-router.route('/').get(async (req, res) => {
+const Router = router.Router();
+Router.route('/').get<RequestParams>(async (_req, res) => {
   const users = await usersService.getAll();
   res.json(users.map(User.toResponse));
 });
-router.route('/').post(async (req, res, next) => {
+Router.route('/').post<RequestParams>(async (req, res, next) => {
   try {
     const user = await usersService.create(req.body);
     res.status(201).json(User.toResponse(user));
   } catch (err) {
-    if (err.message === 'badRequest') {
+    if ((err as Error).message === 'badRequest') {
       res.sendStatus(400);
     } else {
       next(err);
     }
   }
 });
-router.route('/:userId').get(async (req, res, next) => {
+Router.route('/:userId').get<RequestParams>(async (req, res, next) => {
   try {
     const user = await usersService.getOne(req.params.userId);
     res.json(User.toResponse(user));
   } catch (err) {
-    if (err.message === 'notFound') {
+    if ((err as Error).message === 'notFound') {
       res.sendStatus(404);
     } else {
       next(err);
@@ -31,14 +33,14 @@ router.route('/:userId').get(async (req, res, next) => {
   }
 });
 
-router.route('/:userId').put(async (req, res, next) => {
+Router.route('/:userId').put<RequestParams>(async (req, res, next) => {
   try {
     const user = await usersService.updateOne(req.params.userId, req.body);
     res.json(User.toResponse(user));
   } catch (err) {
-    if (err.message === 'notFound') {
+    if ((err as Error).message === 'notFound') {
       res.sendStatus(404);
-    } else if (err.message === 'badRequest') {
+    } else if ((err as Error).message === 'badRequest') {
       res.sendStatus(400);
     } else {
       next(err);
@@ -46,7 +48,7 @@ router.route('/:userId').put(async (req, res, next) => {
   }
 });
 
-router.route('/:userId').delete(async (req, res, next) => {
+Router.route('/:userId').delete<RequestParams>(async (req, res, next) => {
   try {
     await usersService.delete(req.params.userId);
     res.sendStatus(204);
@@ -59,4 +61,4 @@ router.route('/:userId').delete(async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export { Router };
