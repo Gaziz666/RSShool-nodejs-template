@@ -1,29 +1,31 @@
-const router = require('express').Router();
-const boardsService = require('./board.service');
-const taskService = require('../tasks/task.service');
+import router from 'express';
+import { boardsService } from './board.service';
+import { tasksService } from '../tasks/task.service';
 
-router.route('/').get(async (req, res) => {
+const Router = router.Router();
+
+Router.route('/').get(async (req, res) => {
   const boards = await boardsService.getAll();
   res.json(boards);
 });
-router.route('/').post(async (req, res, next) => {
+Router.route('/').post(async (req, res, next) => {
   try {
     const board = await boardsService.create(req.body);
     res.status(201).json(board);
   } catch (err) {
-    if (err.message === 'badRequest') {
+    if ((err as Error).message === 'badRequest') {
       res.sendStatus(400);
     } else {
       next(err);
     }
   }
 });
-router.route('/:boardId').get(async (req, res, next) => {
+Router.route('/:boardId').get(async (req, res, next) => {
   try {
     const board = await boardsService.getOne(req.params.boardId);
     res.json(board);
   } catch (err) {
-    if (err.message === 'notFound') {
+    if ((err as Error).message === 'notFound') {
       res.sendStatus(404);
     } else {
       next(err);
@@ -31,14 +33,14 @@ router.route('/:boardId').get(async (req, res, next) => {
   }
 });
 
-router.route('/:boardId').put(async (req, res, next) => {
+Router.route('/:boardId').put(async (req, res, next) => {
   try {
     const board = await boardsService.updateOne(req.params.boardId, req.body);
     res.json(board);
   } catch (err) {
-    if (err.message === 'notFound') {
+    if ((err as Error).message === 'notFound') {
       res.sendStatus(404);
-    } else if (err.message === 'badRequest') {
+    } else if ((err as Error).message === 'badRequest') {
       res.sendStatus(400);
     } else {
       next(err);
@@ -46,12 +48,12 @@ router.route('/:boardId').put(async (req, res, next) => {
   }
 });
 
-router.route('/:boardId').delete(async (req, res, next) => {
+Router.route('/:boardId').delete(async (req, res, next) => {
   try {
     await boardsService.delete(req.params.boardId);
     res.sendStatus(204);
   } catch (err) {
-    if (err.message === 'notFound') {
+    if ((err as Error).message === 'notFound') {
       res.sendStatus(404);
     } else {
       next(err);
@@ -60,12 +62,12 @@ router.route('/:boardId').delete(async (req, res, next) => {
 });
 
 // task routes
-router.route('/:boardId/tasks').get(async (req, res, next) => {
+Router.route('/:boardId/tasks').get(async (req, res, next) => {
   try {
-    const task = await taskService.getAll(req.params.boardId);
+    const task = await tasksService.getAll(req.params.boardId);
     res.json(task);
   } catch (err) {
-    if (err.message === 'badRequest') {
+    if ((err as Error).message === 'badRequest') {
       res.sendStatus(400);
     } else {
       next(err);
@@ -73,12 +75,12 @@ router.route('/:boardId/tasks').get(async (req, res, next) => {
   }
 });
 
-router.route('/:boardId/tasks').post(async (req, res, next) => {
+Router.route('/:boardId/tasks').post(async (req, res, next) => {
   try {
-    const task = await taskService.create(req.params.boardId, req.body);
+    const task = await tasksService.create(req.params.boardId, req.body);
     res.status(201).json(task);
   } catch (err) {
-    if (err.message === 'badRequest') {
+    if ((err as Error).message === 'badRequest') {
       res.sendStatus(400);
     } else {
       next(err);
@@ -86,15 +88,15 @@ router.route('/:boardId/tasks').post(async (req, res, next) => {
   }
 });
 
-router.route('/:boardId/tasks/:taskId').get(async (req, res, next) => {
+Router.route('/:boardId/tasks/:taskId').get(async (req, res, next) => {
   try {
-    const task = await taskService.getOne(
+    const task = await tasksService.getOne(
       req.params.boardId,
       req.params.taskId
     );
     res.json(task);
   } catch (err) {
-    if (err.message === 'notFound') {
+    if ((err as Error).message === 'notFound') {
       res.sendStatus(404);
     } else {
       next(err);
@@ -102,18 +104,18 @@ router.route('/:boardId/tasks/:taskId').get(async (req, res, next) => {
   }
 });
 
-router.route('/:boardId/tasks/:taskId').put(async (req, res, next) => {
+Router.route('/:boardId/tasks/:taskId').put(async (req, res, next) => {
   try {
-    const task = await taskService.updateOne(
+    const task = await tasksService.updateOne(
       req.params.boardId,
       req.params.taskId,
       req.body
     );
     res.json(task);
   } catch (err) {
-    if (err.message === 'notFound') {
+    if ((err as Error).message === 'notFound') {
       res.sendStatus(404);
-    } else if (err.message === 'badRequest') {
+    } else if ((err as Error).message === 'badRequest') {
       res.sendStatus(400);
     } else {
       next(err);
@@ -121,12 +123,12 @@ router.route('/:boardId/tasks/:taskId').put(async (req, res, next) => {
   }
 });
 
-router.route('/:boardId/tasks/:taskId').delete(async (req, res, next) => {
+Router.route('/:boardId/tasks/:taskId').delete(async (req, res, next) => {
   try {
-    await taskService.delete(req.params.boardId, req.params.taskId);
+    await tasksService.delete(req.params.boardId, req.params.taskId);
     res.sendStatus(204);
   } catch (err) {
-    if (err.message === 'notFound') {
+    if ((err as Error).message === 'notFound') {
       res.sendStatus(404);
     } else {
       next(err);
@@ -134,4 +136,4 @@ router.route('/:boardId/tasks/:taskId').delete(async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export { Router as boardRouter };

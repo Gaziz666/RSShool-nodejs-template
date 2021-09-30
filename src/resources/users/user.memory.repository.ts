@@ -1,35 +1,36 @@
-const User = require('./user.model');
+import { User } from './user.model';
 
-let users = [];
+let users: Array<User> = [];
+export const usersRepo = {
+  getAll: async (): Promise<Array<User>> => users,
 
-module.exports = {
-  getAll: async () => users,
-
-  getOne: async (userId) => {
+  getOne: async (userId: string): Promise<User | undefined> => {
     const user = users.find((item) => item.id === userId);
     return user;
   },
 
-  create: async ({ name, password, login }) => {
+  create: async ({ name, password, login }: User): Promise<User> => {
     const newUser = new User({ name, login, password });
     users.push(newUser);
     return newUser;
   },
 
-  updateOne: async (userId, body) => {
+  updateOne: async (userId: string, body: User) => {
     const index = users.findIndex((item) => item.id === userId);
     if (index < 0) {
       throw new Error('notFound');
     }
     const keys = Object.keys(body);
-    keys.forEach((key) => {
-      users[index][key] = body[key];
-    });
+    (keys as Array<'name' | 'login' | 'password'>).forEach(
+      (key: 'name' | 'login' | 'password') => {
+        users[index]![key] = body[key];
+      }
+    );
 
     return users[index];
   },
 
-  delete: async (userId) => {
+  deleteOne: async (userId: string) => {
     const filteredUsers = users.filter((user) => user.id !== userId);
     if (users.length === filteredUsers.length) {
       throw new Error('notFound');

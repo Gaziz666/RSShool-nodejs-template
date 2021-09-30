@@ -1,12 +1,13 @@
-const { v4: uuid } = require('uuid');
-const Columns = require('./columns.model');
+import { v4 as uuid } from 'uuid';
+import { Columns } from './columns.model';
 
-class Board {
-  constructor({ id = uuid(), title = 'USER', columns = new Columns() } = {}) {
+export class Board {
+  id?: string;
+  title: string;
+  columns: Columns;
+  constructor({ id = uuid(), title = 'USER', columns = new Columns({}) } = {}) {
     this.id = id;
     this.title = title;
     this.columns = columns;
   }
 }
-
-module.exports = Board;

@@ -1,26 +1,36 @@
-const Task = require('./task.model');
+import { Task } from './task.model';
 
-let tasks = [];
+let tasks: Array<Task> = [];
 
-module.exports = {
-  getAll: async (boardId) => {
+export const tasksRepo = {
+  getAll: async (boardId: string): Promise<Array<Task>> => {
     const result = tasks.filter((item) => item.boardId === boardId);
     return result;
   },
 
-  getOne: async (boardId, taskId) => {
+  getOne: async (
+    boardId: string,
+    taskId: string
+  ): Promise<Task | undefined> => {
     const task = tasks.find(
       (item) => item.id === taskId && item.boardId === boardId
     );
     return task;
   },
 
-  create: async ({ title, order, description, userId, boardId, columnId }) => {
+  create: async ({
+    title,
+    order,
+    description,
+    userId = null,
+    boardId,
+    columnId,
+  }: Task): Promise<Task> => {
     const newTask = new Task({
       title,
       order,
       description,
-      userId,
+      userId: userId || undefined,
       boardId,
       columnId,
     });
@@ -28,7 +38,11 @@ module.exports = {
     return newTask;
   },
 
-  updateOne: async (boardId, taskId, body) => {
+  updateOne: async (
+    boardId: string,
+    taskId: string,
+    body: Task
+  ): Promise<Task> => {
     const index = tasks.findIndex(
       (item) => item.id === taskId && item.boardId === boardId
     );
@@ -36,14 +50,16 @@ module.exports = {
       throw new Error('notFound');
     }
     const keys = Object.keys(body);
-    keys.forEach((key) => {
-      tasks[index][key] = body[key];
-    });
+    (keys as Array<'title' | 'description' | 'boardId' | 'columnId'>).forEach(
+      (key: 'title' | 'description' | 'boardId' | 'columnId') => {
+        tasks[index]![key] = body[key];
+      }
+    );
 
-    return tasks[index];
+    return tasks[index]!;
   },
 
-  delete: async (boardId, taskId) => {
+  delete: async (boardId: string, taskId: string) => {
     const filteredTasks = tasks.filter((task) => task.id !== taskId);
     if (tasks.length === filteredTasks.length) {
       throw new Error('notFound');
@@ -51,7 +67,7 @@ module.exports = {
     tasks = filteredTasks;
   },
 
-  deleteByBoardId: async (boardId) => {
+  deleteByBoardId: async (boardId: string) => {
     const filteredTasks = tasks.filter((task) => task.boardId !== boardId);
     if (tasks.length === filteredTasks.length) {
       throw new Error('notFound');
@@ -59,7 +75,7 @@ module.exports = {
     tasks = filteredTasks;
   },
 
-  deleteUserId: async (userId) => {
+  deleteUserId: async (userId: string) => {
     const mapTask = tasks.map((task) => {
       const newTask = task;
       if (newTask.userId === userId) {

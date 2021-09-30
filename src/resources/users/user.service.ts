@@ -1,19 +1,20 @@
-const usersRepo = require('./user.memory.repository');
-const tasksRepo = require('../tasks/task.memory.repository');
+import { usersRepo } from './user.memory.repository';
+import { tasksRepo } from '../tasks/task.memory.repository';
+import { User } from './user.model';
 
-module.exports = {
-  getAll: async () => {
+export const usersService = {
+  getAll: async (): Promise<Array<User> | []> => {
     const result = await usersRepo.getAll();
     return result;
   },
 
-  getOne: async (userId) => {
+  getOne: async (userId: string): Promise<User> => {
     const user = await usersRepo.getOne(userId);
     if (!user) throw new Error('notFound');
     return user;
   },
 
-  create: async ({ name, login, password }) => {
+  create: async ({ name, login, password }: User): Promise<User> => {
     if (!name || !login || !password) {
       throw new Error('badRequest');
     }
@@ -22,14 +23,14 @@ module.exports = {
     return user;
   },
 
-  updateOne: async (userId, body) => {
+  updateOne: async (userId: string, body: User): Promise<User> => {
     const user = await usersRepo.updateOne(userId, body);
     if (!user) throw new Error('notFound');
     return user;
   },
 
-  delete: async (userId) => {
-    await usersRepo.delete(userId);
+  deleteOne: async (userId: string): Promise<void> => {
+    await usersRepo.deleteOne(userId);
     tasksRepo.deleteUserId(userId);
   },
 };

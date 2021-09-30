@@ -1,10 +1,6 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 export type RequestParams = (
-  req: GetParams,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => void;
-
-interface GetParams extends Request {
-  userId: string;
-}

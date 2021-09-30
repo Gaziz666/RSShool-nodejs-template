@@ -1,14 +1,13 @@
-import router, { ErrorRequestHandler } from 'express';
-import { RequestParams } from '../../@types/module';
-import User from './user.model';
-import usersService from './user.service';
+import router from 'express';
+import { User } from './user.model';
+import { usersService } from './user.service';
 
 const Router = router.Router();
-Router.route('/').get<RequestParams>(async (_req, res) => {
+Router.route('/').get(async (_req, res) => {
   const users = await usersService.getAll();
   res.json(users.map(User.toResponse));
 });
-Router.route('/').post<RequestParams>(async (req, res, next) => {
+Router.route('/').post(async (req, res, next) => {
   try {
     const user = await usersService.create(req.body);
     res.status(201).json(User.toResponse(user));
@@ -20,9 +19,9 @@ Router.route('/').post<RequestParams>(async (req, res, next) => {
     }
   }
 });
-Router.route('/:userId').get<RequestParams>(async (req, res, next) => {
+Router.route('/:userId').get(async (req, res, next) => {
   try {
-    const user = await usersService.getOne(req.params.userId);
+    const user = await usersService.getOne(req.params['userId']);
     res.json(User.toResponse(user));
   } catch (err) {
     if ((err as Error).message === 'notFound') {
@@ -33,9 +32,9 @@ Router.route('/:userId').get<RequestParams>(async (req, res, next) => {
   }
 });
 
-Router.route('/:userId').put<RequestParams>(async (req, res, next) => {
+Router.route('/:userId').put(async (req, res, next) => {
   try {
-    const user = await usersService.updateOne(req.params.userId, req.body);
+    const user = await usersService.updateOne(req.params['userId'], req.body);
     res.json(User.toResponse(user));
   } catch (err) {
     if ((err as Error).message === 'notFound') {
@@ -48,9 +47,9 @@ Router.route('/:userId').put<RequestParams>(async (req, res, next) => {
   }
 });
 
-Router.route('/:userId').delete<RequestParams>(async (req, res, next) => {
+Router.route('/:userId').delete(async (req, res, next) => {
   try {
-    await usersService.delete(req.params.userId);
+    await usersService.deleteOne(req.params.userId);
     res.sendStatus(204);
   } catch (err) {
     if (err === 'notFound') {
@@ -61,4 +60,4 @@ Router.route('/:userId').delete<RequestParams>(async (req, res, next) => {
   }
 });
 
-export { Router };
+export { Router as userRouter };

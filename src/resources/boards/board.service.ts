@@ -1,19 +1,20 @@
-const boardsRepo = require('./board.memory.repository');
-const tasksRepo = require('../tasks/task.memory.repository');
+import { boardsRepo } from './board.memory.repository';
+import { tasksRepo } from '../tasks/task.memory.repository';
+import { Board } from './board.model';
 
-module.exports = {
+export const boardsService = {
   getAll: async () => {
     const result = await boardsRepo.getAll();
     return result;
   },
 
-  getOne: async (boardId) => {
+  getOne: async (boardId: string) => {
     const board = await boardsRepo.getOne(boardId);
     if (!board) throw new Error('notFound');
     return board;
   },
 
-  create: async ({ title, columns }) => {
+  create: async ({ title, columns }: Board) => {
     if (!title || !columns) {
       throw new Error('badRequest');
     }
@@ -22,13 +23,13 @@ module.exports = {
     return board;
   },
 
-  updateOne: async (boardId, body) => {
+  updateOne: async (boardId: string, body: Board) => {
     const board = await boardsRepo.updateOne(boardId, body);
     if (!board) throw new Error('notFound');
     return board;
   },
 
-  delete: async (boardId) => {
+  delete: async (boardId: string) => {
     await boardsRepo.delete(boardId);
     tasksRepo.deleteByBoardId(boardId);
   },
