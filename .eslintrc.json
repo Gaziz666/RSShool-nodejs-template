@@ -13,14 +13,24 @@
       "impliedStrict": true
     }
   },
+  "parser": "@typescript-eslint/parser",
   "settings": {
     "noInlineConfig": true
   },
+  "plugins": ["@typescript-eslint"],
   "extends": [
+    "plugin:@typescript-eslint/recommended",
     "eslint:recommended",
     "plugin:node/recommended",
-    "airbnb-base",
-    "prettier"
+    "prettier",
+    {
+      "node/no-missing-import": [
+        "error",
+        {
+          "tryExtensions": [".js", ".json", ".ts"]
+        }
+      ]
+    }
   ],
   "rules": {
     "import/extensions": "off",

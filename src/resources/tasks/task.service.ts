@@ -38,7 +38,7 @@ export const tasksService = {
     return task;
   },
 
-  delete: async (boardId: string, taskId: string) => {
-    await tasksRepo.delete(boardId, taskId);
+  delete: async (taskId: string) => {
+    await tasksRepo.delete(taskId);
   },
 };

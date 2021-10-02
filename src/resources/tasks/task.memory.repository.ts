@@ -22,18 +22,18 @@ export const tasksRepo = {
     title,
     order,
     description,
-    userId = null,
+    userId,
     boardId,
     columnId,
   }: Task): Promise<Task> => {
-    const newTask = new Task({
+    const newTask = new Task({}).create!(
       title,
       order,
       description,
-      userId: userId || undefined,
+      userId,
       boardId,
-      columnId,
-    });
+      columnId
+    );
     tasks.push(newTask);
     return newTask;
   },
@@ -59,7 +59,7 @@ export const tasksRepo = {
     return tasks[index]!;
   },
 
-  delete: async (boardId: string, taskId: string) => {
+  delete: async (taskId: string) => {
     const filteredTasks = tasks.filter((task) => task.id !== taskId);
     if (tasks.length === filteredTasks.length) {
       throw new Error('notFound');
@@ -83,6 +83,7 @@ export const tasksRepo = {
       }
       return newTask;
     });
+    console.log(mapTask, userId);
     tasks = mapTask;
   },
 };

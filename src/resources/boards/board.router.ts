@@ -5,6 +5,7 @@ import { tasksService } from '../tasks/task.service';
 const Router = router.Router();
 
 Router.route('/').get(async (req, res) => {
+  req.headers;
   const boards = await boardsService.getAll();
   res.json(boards);
 });
@@ -125,7 +126,7 @@ Router.route('/:boardId/tasks/:taskId').put(async (req, res, next) => {
 
 Router.route('/:boardId/tasks/:taskId').delete(async (req, res, next) => {
   try {
-    await tasksService.delete(req.params.boardId, req.params.taskId);
+    await tasksService.delete(req.params.taskId);
     res.sendStatus(204);
   } catch (err) {
     if ((err as Error).message === 'notFound') {

@@ -31,6 +31,6 @@ export const usersService = {
 
   deleteOne: async (userId: string): Promise<void> => {
     await usersRepo.deleteOne(userId);
-    tasksRepo.deleteUserId(userId);
+    await tasksRepo.deleteUserId(userId);
   },
 };
