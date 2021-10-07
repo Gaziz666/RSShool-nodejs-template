@@ -1,0 +1,14 @@
+Wed Oct 06 2021 21:54:55 GMT+0500 (Yekaterinburg Standard Time) url: /users, method: GET, params: {}, query: {}, body: {}, statusCode: 200
+Wed Oct 06 2021 21:54:56 GMT+0500 (Yekaterinburg Standard Time) url: /users, method: GET, params: {}, query: {}, body: {}, statusCode: 200
+Wed Oct 06 2021 22:33:01 GMT+0500 (Yekaterinburg Standard Time) url: /users/1, method: DELETE, params: {}, query: {}, body: {}, statusCode: 200
+error: Error: notFound
+    at Object.deleteOne (/Users/gaziztuleukulov/Documents/Learning/NodeJSRSScool/tsk-from-template/RSShool-nodejs-template/src/resources/users/user.memory.repository.ts:36:13)
+    at Object.deleteOne (/Users/gaziztuleukulov/Documents/Learning/NodeJSRSScool/tsk-from-template/RSShool-nodejs-template/src/resources/users/user.service.ts:33:21)
+    at /Users/gaziztuleukulov/Documents/Learning/NodeJSRSScool/tsk-from-template/RSShool-nodejs-template/src/resources/users/user.router.ts:54:24
+    at Layer.handle [as handle_request] (/Users/gaziztuleukulov/Documents/Learning/NodeJSRSScool/tsk-from-template/RSShool-nodejs-template/node_modules/express/lib/router/layer.js:95:5)
+    at next (/Users/gaziztuleukulov/Documents/Learning/NodeJSRSScool/tsk-from-template/RSShool-nodejs-template/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/Users/gaziztuleukulov/Documents/Learning/NodeJSRSScool/tsk-from-template/RSShool-nodejs-template/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/Users/gaziztuleukulov/Documents/Learning/NodeJSRSScool/tsk-from-template/RSShool-nodejs-template/node_modules/express/lib/router/layer.js:95:5)
+    at /Users/gaziztuleukulov/Documents/Learning/NodeJSRSScool/tsk-from-template/RSShool-nodejs-template/node_modules/express/lib/router/index.js:281:22
+    at param (/Users/gaziztuleukulov/Documents/Learning/NodeJSRSScool/tsk-from-template/RSShool-nodejs-template/node_modules/express/lib/router/index.js:354:14)
+    at param (/Users/gaziztuleukulov/Documents/Learning/NodeJSRSScool/tsk-from-template/RSShool-nodejs-template/node_modules/express/lib/router/index.js:365:14)

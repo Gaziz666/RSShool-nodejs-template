@@ -7,6 +7,7 @@ Router.route('/').get(async (_req, res) => {
   const users = await usersService.getAll();
   res.json(users.map(User.toResponse));
 });
+
 Router.route('/').post(async (req, res, next) => {
   try {
     const user = await usersService.create(req.body);
@@ -19,6 +20,7 @@ Router.route('/').post(async (req, res, next) => {
     }
   }
 });
+
 Router.route('/:userId').get(async (req, res, next) => {
   try {
     const user = await usersService.getOne(req.params['userId']);

@@ -2,6 +2,13 @@ import express from 'express';
 import swaggerUI from 'swagger-ui-express';
 import path from 'path';
 import YAML from 'yamljs';
+import {
+  requestLogger,
+  errorLogger,
+  errorHandler,
+  uncaughtExceptionHandler,
+  unhandledRejectionHandler,
+} from './errorhandler/errHandler';
 import { userRouter } from './resources/users/user.router';
 import { boardRouter } from './resources/boards/board.router';
 
@@ -19,8 +26,13 @@ app.use('/', (req, res, next) => {
   }
   next();
 });
-
+app.use(requestLogger);
 app.use('/users', userRouter);
 app.use('/boards', boardRouter);
+app.use(errorLogger);
+app.use(errorHandler);
+throw Error('Oops!');
+process.on('uncaughtException', uncaughtExceptionHandler);
+process.on('unhandledRejection', unhandledRejectionHandler);
 
 export default app;

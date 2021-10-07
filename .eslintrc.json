@@ -18,20 +18,7 @@
     "noInlineConfig": true
   },
   "plugins": ["@typescript-eslint"],
-  "extends": [
-    "plugin:@typescript-eslint/recommended",
-    "eslint:recommended",
-    "plugin:node/recommended",
-    "prettier",
-    {
-      "node/no-missing-import": [
-        "error",
-        {
-          "tryExtensions": [".js", ".json", ".ts"]
-        }
-      ]
-    }
-  ],
+  "extends": ["plugin:@typescript-eslint/recommended", "prettier"],
   "rules": {
     "import/extensions": "off",
     "linebreak-style": "off",
