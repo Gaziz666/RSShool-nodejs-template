@@ -44,6 +44,7 @@ export const errorHandler = (err: IError, _req: Request, res: Response) => {
 };
 
 export const uncaughtExceptionHandler = (err: IError) => {
+  console.log(err);
   fs.appendFile(
     path,
     `uncaughtExceptionHandler: ${err.stack || err.message}`,

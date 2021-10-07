@@ -15,6 +15,8 @@ import { boardRouter } from './resources/boards/board.router';
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
+process.on('uncaughtException', uncaughtExceptionHandler);
+process.on('unhandledRejection', unhandledRejectionHandler);
 app.use(express.json());
 
 app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
@@ -31,8 +33,5 @@ app.use('/users', userRouter);
 app.use('/boards', boardRouter);
 app.use(errorLogger);
 app.use(errorHandler);
-throw Error('Oops!');
-process.on('uncaughtException', uncaughtExceptionHandler);
-process.on('unhandledRejection', unhandledRejectionHandler);
 
 export default app;
