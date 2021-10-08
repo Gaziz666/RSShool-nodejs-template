@@ -1,9 +1,10 @@
 import fs from 'fs';
 import { Request, Response, NextFunction } from 'express';
 import { IError } from '../@types/module';
+import { ResolveConfigOptions } from 'prettier';
 
 const path = 'log/log.txt';
-
+// all errors show on console add date and counter
 export const requestLogger = (
   req: Request,
   res: Response,
@@ -54,11 +55,14 @@ export const uncaughtExceptionHandler = (err: IError) => {
   );
   process.exit(1);
 };
-
-export const unhandledRejectionHandler = (err: IError) => {
+// WIP
+export const unhandledRejectionHandler = (
+  reject: PromiseRejectedResult,
+  resolve: ResolveConfigOptions
+) => {
   fs.appendFile(
     path,
-    `unhandledRejectionHandler: ${err.stack || err.message}`,
+    `unhandledRejectionHandler: ${reject || resolve}`,
     (err) => {
       console.log(err);
     }
