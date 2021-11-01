@@ -1,13 +1,18 @@
-import { v4 as uuid } from 'uuid';
-import { Columns } from './columns.model';
+import { Task } from './../tasks/task.model';
+import { Columns } from './../columns/column.model';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
+@Entity('Board')
 export class Board {
-  id?: string;
-  title: string;
-  columns: Columns;
-  constructor({ id = uuid(), title = 'USER', columns = new Columns({}) } = {}) {
-    this.id = id;
-    this.title = title;
-    this.columns = columns;
-  }
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
+
+  @Column({ type: 'varchar', default: 'border Title' })
+  title!: string;
+
+  @OneToMany(() => Columns, (column) => column.board)
+  columns!: Columns[];
+
+  @OneToMany(() => Task, (task) => task.board)
+  task!: Task[];
 }

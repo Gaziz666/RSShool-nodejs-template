@@ -1,9 +1,9 @@
-import { usersRepo } from './user.memory.repository';
-import { tasksRepo } from '../tasks/task.memory.repository';
+import { usersRepo } from './user.repository';
+
 import { User } from './user.model';
 
 export const usersService = {
-  getAll: async (): Promise<Array<User> | []> => {
+  getAll: async (): Promise<User[] | []> => {
     const result = await usersRepo.getAll();
     return result;
   },
@@ -14,7 +14,7 @@ export const usersService = {
     return user;
   },
 
-  create: async ({ name, login, password }: User): Promise<User> => {
+  create: async ({ name, login, password }: User): Promise<Partial<User>> => {
     if (!name || !login || !password) {
       throw new Error('badRequest');
     }
@@ -30,7 +30,8 @@ export const usersService = {
   },
 
   deleteOne: async (userId: string): Promise<void> => {
-    await usersRepo.deleteOne(userId);
-    await tasksRepo.deleteUserId(userId);
+    const result = await usersRepo.deleteOne(userId);
+    if (!result) throw new Error('notFound');
+    // await tasksRepo.deleteUserId(userId);
   },
 };

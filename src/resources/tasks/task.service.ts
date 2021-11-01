@@ -1,5 +1,5 @@
-import { tasksRepo } from './task.memory.repository';
-import { Task } from './task.model';
+import { tasksRepo } from './task.repository';
+import { ITask, Task } from './task.model';
 
 export const tasksService = {
   getAll: async (boardId: string) => {
@@ -15,7 +15,7 @@ export const tasksService = {
 
   create: async (
     boardId: string,
-    { title, order, description, userId, columnId }: Task
+    { title, order, description, userId, columnId }: ITask
   ) => {
     if (!title || !(+order >= 0) || !description) {
       throw new Error('badRequest');
@@ -33,12 +33,22 @@ export const tasksService = {
   },
 
   updateOne: async (boardId: string, taskId: string, body: Task) => {
-    const task = await tasksRepo.updateOne(boardId, taskId, body);
+    const params: Partial<Task> = {};
+    if (body.title) {
+      params.title = body.title;
+    }
+    if (body.order) {
+      params.order = body.order;
+    }
+    if (body.description) {
+      params.description;
+    }
+    const task = await tasksRepo.updateOne(boardId, taskId, params);
     if (!task) throw new Error('notFound');
     return task;
   },
 
-  delete: async (taskId: string) => {
-    await tasksRepo.delete(taskId);
+  delete: async (boardId: string, taskId: string) => {
+    await tasksRepo.deleteOne(boardId, taskId);
   },
 };

@@ -1,5 +1,5 @@
-import { boardsRepo } from './board.memory.repository';
-import { tasksRepo } from '../tasks/task.memory.repository';
+import { boardsRepo } from './board.repository';
+
 import { Board } from './board.model';
 
 export const boardsService = {
@@ -30,7 +30,7 @@ export const boardsService = {
   },
 
   delete: async (boardId: string) => {
-    await boardsRepo.delete(boardId);
-    tasksRepo.deleteByBoardId(boardId);
+    await boardsRepo.deleteOne(boardId);
+    // tasksRepo.deleteByBoardId(boardId);
   },
 };

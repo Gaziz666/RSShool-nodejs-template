@@ -1,18 +1,13 @@
 import router, { Response, NextFunction } from 'express';
 import { IRequest } from '../../@types/module';
-import { usersService } from './user.service';
+import { tasksService } from './task.service';
 
 const Router = router.Router();
-Router.route('/').get(async (_req, res) => {
-  const users = await usersService.getAll();
-  res.json(users);
-});
-
-Router.route('/').post(
+Router.route('/').get(
   async (req: IRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const user = await usersService.create(req.body);
-      res.status(201).json(user);
+      const task = await tasksService.getAll(req.boardId!);
+      res.json(task);
     } catch (err) {
       if ((err as Error).message === 'badRequest') {
         res.sendStatus(400);
@@ -23,11 +18,26 @@ Router.route('/').post(
   }
 );
 
-Router.route('/:userId').get(
+Router.route('/').post(
   async (req: IRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const user = await usersService.getOne(req.params['userId']);
-      res.json(user);
+      const task = await tasksService.create(req.boardId!, req.body);
+      res.status(201).json(task);
+    } catch (err) {
+      if ((err as Error).message === 'badRequest') {
+        res.sendStatus(400);
+      } else {
+        next(err);
+      }
+    }
+  }
+);
+
+Router.route('/:taskId').get(
+  async (req: IRequest, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const task = await tasksService.getOne(req.boardId!, req.params.taskId);
+      res.json(task);
     } catch (err) {
       if ((err as Error).message === 'notFound') {
         res.sendStatus(404);
@@ -38,11 +48,15 @@ Router.route('/:userId').get(
   }
 );
 
-Router.route('/:userId').put(
+Router.route('/:taskId').put(
   async (req: IRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const user = await usersService.updateOne(req.params['userId'], req.body);
-      res.json(user);
+      const task = await tasksService.updateOne(
+        req.boardId!,
+        req.params.taskId,
+        req.body
+      );
+      res.json(task);
     } catch (err) {
       if ((err as Error).message === 'notFound') {
         res.sendStatus(404);
@@ -55,13 +69,13 @@ Router.route('/:userId').put(
   }
 );
 
-Router.route('/:userId').delete(
+Router.route('/:taskId').delete(
   async (req: IRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-      await usersService.deleteOne(req.params['userId']);
+      await tasksService.delete(req.boardId!, req.params.taskId);
       res.sendStatus(204);
     } catch (err) {
-      if (err === 'notFound') {
+      if ((err as Error).message === 'notFound') {
         res.sendStatus(404);
       } else {
         next(err);
@@ -70,4 +84,4 @@ Router.route('/:userId').delete(
   }
 );
 
-export { Router as userRouter };
+export { Router as taskRouter };

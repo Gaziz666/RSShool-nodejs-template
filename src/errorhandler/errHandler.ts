@@ -1,6 +1,6 @@
+import { IError } from './../@types/module.d';
 import fs from 'fs';
 import { Request, Response, NextFunction } from 'express';
-import { IError } from '../@types/module';
 import { ResolveConfigOptions } from 'prettier';
 
 const path = 'log/log.txt';
@@ -36,12 +36,18 @@ export const errorLogger = (
   fs.appendFile(path, `error: ${err.stack}`, (err) => {
     console.log(err);
   });
+  console.log(err.stack);
   next(err);
 };
 
-export const errorHandler = (err: IError, _req: Request, res: Response) => {
+export const errorHandler = (
+  err: IError,
+  _req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
   res.status(500);
-  res.render('error', { error: err });
+  res.json(err.stack);
 };
 
 export const uncaughtExceptionHandler = (err: IError) => {

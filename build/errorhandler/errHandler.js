@@ -25,7 +25,7 @@ const errorLogger = (err, _req, _res, next) => {
 };
 exports.errorLogger = errorLogger;
 const errorHandler = (err, _req, res) => {
-    res.status(500);
+    res.sendStatus(500);
     res.render('error', { error: err });
 };
 exports.errorHandler = errorHandler;

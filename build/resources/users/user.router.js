@@ -5,18 +5,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRouter = void 0;
 const express_1 = __importDefault(require("express"));
-const user_model_1 = require("./user.model");
 const user_service_1 = require("./user.service");
 const Router = express_1.default.Router();
 exports.userRouter = Router;
 Router.route('/').get(async (_req, res) => {
     const users = await user_service_1.usersService.getAll();
-    res.json(users.map(user_model_1.User.toResponse));
+    res.json(users);
 });
-Router.route('/').post(async (req, res, next) => {
+Router.route('/').post(async (_err, req, res, next) => {
     try {
         const user = await user_service_1.usersService.create(req.body);
-        res.status(201).json(user_model_1.User.toResponse(user));
+        // res.status(201).json(user);
+        res.json(user);
     }
     catch (err) {
         if (err.message === 'badRequest') {
@@ -30,7 +30,7 @@ Router.route('/').post(async (req, res, next) => {
 Router.route('/:userId').get(async (req, res, next) => {
     try {
         const user = await user_service_1.usersService.getOne(req.params['userId']);
-        res.json(user_model_1.User.toResponse(user));
+        res.json(user);
     }
     catch (err) {
         if (err.message === 'notFound') {
@@ -44,7 +44,7 @@ Router.route('/:userId').get(async (req, res, next) => {
 Router.route('/:userId').put(async (req, res, next) => {
     try {
         const user = await user_service_1.usersService.updateOne(req.params['userId'], req.body);
-        res.json(user_model_1.User.toResponse(user));
+        res.json(user);
     }
     catch (err) {
         if (err.message === 'notFound') {

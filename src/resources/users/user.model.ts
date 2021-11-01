@@ -1,25 +1,20 @@
-import { v4 as uuid } from 'uuid';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Task } from '../tasks/task.model';
 
+@Entity('User')
 export class User {
-  id?: string;
-  name: string;
-  login: string;
-  password: string;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
-  constructor({
-    id = uuid(),
-    name = 'USER',
-    login = 'user',
-    password = 'P@55w0rd',
-  } = {}) {
-    this.id = id;
-    this.name = name;
-    this.login = login;
-    this.password = password;
-  }
+  @Column({ type: 'varchar', default: 'USER' })
+  name!: string;
 
-  static toResponse(user: User) {
-    const { id, name, login } = user;
-    return { id, name, login };
-  }
+  @Column({ type: 'varchar', default: 'user' })
+  login!: string;
+
+  @Column({ type: 'varchar', default: 'P@55w)rd' })
+  password?: string;
+
+  @OneToMany(() => Task, (task) => task.user)
+  task!: Task[];
 }

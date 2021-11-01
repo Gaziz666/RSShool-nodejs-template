@@ -1,47 +1,37 @@
-import { v4 as uuid } from 'uuid';
+import { Columns } from './../columns/column.model';
+import { Board } from './../boards/board.model';
+import { User } from './../users/user.model';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
-export class Task {
-  id?: string;
-  userId: string | null;
+export interface ITask {
+  id: string;
   title: string;
   order: number;
   description: string;
-  boardId: string;
-  columnId: string;
+  userId?: string | null;
+  boardId?: string | null;
+  columnId?: string | null;
+}
+@Entity('Task')
+export class Task implements ITask {
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
-  constructor({
-    id = uuid(),
-    title = 'USER',
-    order = 0,
-    description = '',
-    userId = null,
-    boardId = '',
-    columnId = '',
-  }) {
-    this.id = id;
-    this.title = title;
-    this.order = order;
-    this.description = description;
-    this.userId = userId;
-    this.boardId = boardId;
-    this.columnId = columnId;
-  }
-  create? = (
-    title = 'USER',
-    order: number,
-    description = '',
-    userId: string | null,
-    boardId = '',
-    columnId = ''
-  ) => {
-    this.id = uuid();
-    this.title = title;
-    this.order = order;
-    this.description = description;
-    this.userId = userId;
-    this.boardId = boardId;
-    this.columnId = columnId;
+  @Column({ type: 'varchar', default: 'title' })
+  title!: string;
 
-    return this;
-  };
+  @Column({ type: 'integer', default: 0 })
+  order!: number;
+
+  @Column({ type: 'varchar', default: '' })
+  description!: string;
+
+  @ManyToOne(() => User, (user) => user.task, { onDelete: 'SET NULL' })
+  user!: User['id'];
+
+  @ManyToOne(() => Board, (board) => board.task, { onDelete: 'SET NULL' })
+  board!: Board['id'];
+
+  @ManyToOne(() => Columns, (column) => column.task, { onDelete: 'SET NULL' })
+  column!: Columns['id'];
 }
