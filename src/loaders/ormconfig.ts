@@ -22,7 +22,6 @@ const DBConnection = async () =>
     database: POSTGRES_DB,
     entities: [User, Board, Columns, Task],
     synchronize: true,
-    logging: true,
   });
 
 export default DBConnection;

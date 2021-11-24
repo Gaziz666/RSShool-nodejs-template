@@ -20,11 +20,12 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: ${POSTGRS_HOST}
     networks:
       - bd-network
 
 networks:
-  node-network: 
+  node-network:
     driver: bridge
   bd-network:
     driver: bridge

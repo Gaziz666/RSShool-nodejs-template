@@ -15,6 +15,8 @@ import {
 import { userRouter } from './resources/users/user.router';
 import { boardRouter } from './resources/boards/board.router';
 import { taskRouter } from './resources/tasks/task.router';
+import { visitorRouter } from './resources/visitors/visitors.router';
+import { ldapRouter } from './resources/visitors/ldap.router';
 
 // const app = DBConnection.then((connect) => {
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
@@ -38,6 +40,8 @@ app.use(requestLogger);
 app.use('/users', userRouter);
 app.use('/boards', boardRouter);
 app.use('/boards/:boardId/tasks', boardContext, taskRouter);
+app.use('/visitors', visitorRouter);
+app.use('/ldap', ldapRouter);
 app.use(errorLogger);
 app.use(errorHandler);
 
