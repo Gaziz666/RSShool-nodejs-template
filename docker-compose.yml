@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  node:
+    build: .
+    restart: unless-stopped
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - postgres
+    environment:
+      - PORT=${PORT}
+    networks:
+      - node-network
+  postgres:
+    build: ./database
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: ${POSTGRS_HOST}
+    networks:
+      - bd-network
+
+networks:
+  node-network:
+    driver: bridge
+  bd-network:
+    driver: bridge
